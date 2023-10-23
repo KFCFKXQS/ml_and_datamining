@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import copy
 
+# for checking correctness
 def seed_init(seed=0):
     import numpy as np
     import random
