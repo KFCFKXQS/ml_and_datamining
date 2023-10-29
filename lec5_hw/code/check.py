@@ -68,6 +68,10 @@ def check_loss_n_dW_on_device(softmax_function, device, test_times = 100, test_s
 
         assert torch.abs(loss - combined_loss).item() < 1e-2, f"{i} Loss mismatch {loss} \n {combined_loss}"
         assert torch.allclose(dW.to(device), torch_dW, atol=1e-2), f"{i} Gradient mismatch"
+        
+        tqdm._instances.clear()
+        while len(tqdm._instances) > 0:
+            tqdm._instances.pop().close()
     
     average_time = total_time / test_times
     print(f"All checks pass on device '{device}' |  avg: {average_time:.5f} s/iter")
@@ -206,7 +210,7 @@ if __name__ == "__main__":
     seed_init(0)
     from model import SoftmaxClassifier
     # test: fitting argmax
-    device = torch.device('cuda')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     # My classifier
     softmax_classifier = SoftmaxClassifier(
@@ -251,7 +255,10 @@ if __name__ == "__main__":
 #########################################################################################
 if __name__ == "__main__":
     seed_init(0)
+    from demo import CIFAR10_URL, DATASET_DIR
     from dataloader import *
+    download_and_extract_cifar10(CIFAR10_URL, DATASET_DIR)
+
     #labels reading test
     print('###########################################')
     print('LABEL READING TEST')

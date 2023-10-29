@@ -100,9 +100,9 @@ class SoftmaxClassifier:
         """Save the model weights."""
         torch.save(self.W, path)
 
-    def load(self, path="softmax_classifier_weights.pth"):
+    def load(self, path="softmax_classifier_weights.pth", map_location=torch.device('cuda')):
         """Load the model weights."""
-        self.W = torch.load(path)
+        self.W = torch.load(path, map_location=map_location)
 
 def display(train_loss_history, test_loss_history, train_acc_history, test_acc_history):
     import matplotlib.pyplot as plt

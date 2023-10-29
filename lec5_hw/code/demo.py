@@ -11,13 +11,15 @@ CIFAR10_URL = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
 DATASET_DIR = "./dataset/cifar10"
 
 # Create `./dataset/cifar10`  and put all 7 .pth files in folder `cifar10`
-download_and_extract_cifar10(CIFAR10_URL, DATASET_DIR)
+
 
 if __name__ == '__main__':
+    download_and_extract_cifar10(CIFAR10_URL, DATASET_DIR)
+
     seed_init(SEED)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     classifier = SoftmaxClassifier(input_dim=3072, num_classes=10)
-    classifier.load('./checkpoints/weights_lr_0.005_bs_5000_reg_1e-3_valacc_0.4120.pth')
+    classifier.load('./checkpoints/weights_lr_0.005_bs_5000_reg_1e-3_valacc_0.4120.pth', map_location=device)
     
     classifier.device=device
     _, _, _, _, X_test, Y_test = load_cifar_10(seed=SEED)
@@ -42,6 +44,7 @@ if __name__ == '__main__':
     all_selected_indices = np.concatenate([selected_correct, selected_incorrect])
 
     # 显示选择的图片
+    plt.ioff()
     plt.figure(figsize=(12, 12))
     for i, index in enumerate(all_selected_indices):
         plt.subplot(4, 4, i+1)
